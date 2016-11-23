@@ -1,0 +1,17 @@
+apply plugin: 'groovy'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
+}
+
+test {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStackTraces true
+        exceptionFormat 'full'
+    }
+}
