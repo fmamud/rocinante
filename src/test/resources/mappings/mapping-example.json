@@ -1,0 +1,20 @@
+{
+  "id" : "9df9e152-2e9c-371a-aa3a-4e6be10221dc",
+  "uuid" : "9df9e152-2e9c-371a-aa3a-4e6be10221dc",
+  "request" : {
+    "url" : "/v2/5835a32e1100001c070bffa9",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "tape-example.json",
+    "headers" : {
+      "Server" : "Apache-Coyote/1.1",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Expose-Headers" : "Location",
+      "Content-Type" : "application/json;charset=utf-8",
+      "Transfer-Encoding" : "chunked",
+      "Date" : "Tue, 22 Nov 2016 20:20:48 GMT"
+    }
+  }
+}
