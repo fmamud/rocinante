@@ -9,10 +9,10 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target([ElementType.FIELD, ElementType.TYPE])
 @ExtensionAnnotation(RocinanteExtension)
 public @interface Rocinante {
-    String directory();
-    String mappings() default "mappings";
-    String tapes() default "__files";
+    String binding() default '';
+    String config() default '';
+    boolean content() default false;
 }

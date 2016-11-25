@@ -1,5 +1,6 @@
 package com.rocinante.extension
 
+import com.rocinante.Config
 import com.rocinante.Rocinante
 import com.rocinante.interceptor.RocinanteInterceptor
 import groovy.json.JsonSlurper
@@ -13,57 +14,57 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
 
     private JsonSlurper slurper = new JsonSlurper()
 
-    private Rocinante rocinante
+    private Config config = new Config()
+
+    private def bindings = []
 
     @Override
     void visitFieldAnnotation(Rocinante rocinante, FieldInfo field) {
-        this.rocinante = rocinante
-        build(field)
+        bindings << new Expando(rocinante: rocinante, field: field)
     }
 
-    private void build(FieldInfo fieldInfo) {
-        def file = new File(rocinante.directory())
+    @Override
+    void visitSpecAnnotation(Rocinante annotation, SpecInfo spec) {
+        def file = new File(config.basepath)
 
         if (file.exists()) {
-            def mappingDir = new File(file, rocinante.mappings())
+            def mappingDir = new File(file, config.mappings)
 
             if (mappingDir.exists()) {
                 def mappings = mappingDir.listFiles()
                 mappings.each {
-                    buildFeature(it, fieldInfo)
+                    buildFeature(it, spec)
                 }
             }
         }
 
-        fieldInfo.parent.features[0].skipped = true
+        spec.features[0].skipped = true
     }
 
-    private buildFeature(File mapping, FieldInfo fieldInfo) {
-        def spec = fieldInfo.parent
+    private buildFeature(File mappingFile, SpecInfo spec) {
         def clazz = spec.reflection
 
-        def json = slurper.parseText(mapping.text)
+        def mapping = slurper.parseText(mappingFile.text)
 
         clazz.getDeclaredMethods().each { Method method ->
             FeatureMetadata metadata = method.getAnnotation(FeatureMetadata.class)
             if (metadata) {
                 method.accessible = true
-                spec.addFeature(createFeature(json, method, fieldInfo))
+                spec.addFeature(createFeature(mapping, method, spec))
             }
         }
     }
 
-    private FeatureInfo createFeature(json, method, fieldInfo) {
-        def specInfo = fieldInfo.parent
-        def name = buildName(json.request.url)
+    private FeatureInfo createFeature(mapping, method, spec) {
+        def name = buildName(mapping.request.url)
 
         def description = Description.createSuiteDescription(name)
 
-        FeatureInfo feature = new FeatureInfo(parent: specInfo,
+        FeatureInfo feature = new FeatureInfo(parent: spec,
                 name: name,
                 description: description)
 
-        MethodInfo featureMethod = new MethodInfo(parent: specInfo,
+        MethodInfo featureMethod = new MethodInfo(parent: spec,
                 name: name,
                 description: description,
                 feature: feature,
@@ -71,11 +72,7 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
                 kind: MethodKind.FEATURE,
         );
 
-        def tapesDir = new File(rocinante.directory(), rocinante.tapes())
-
-        def responseFile = new File(tapesDir, json.response.bodyFileName)
-
-        featureMethod.addInterceptor(new RocinanteInterceptor(fieldInfo, responseFile.text))
+        featureMethod.addInterceptor(new RocinanteInterceptor(mapping, bindings, config))
 
         feature.featureMethod = featureMethod
 
