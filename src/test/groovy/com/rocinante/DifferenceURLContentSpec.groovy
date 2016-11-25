@@ -12,7 +12,7 @@ class DifferenceURLContentSpec extends Specification {
     @Rocinante(binding = 'request.url')
     String url
 
-    @Rocinante(binding = 'response.bodyFileName', content = true)
+    @Rocinante(binding = 'response.bodyFileName', isFile = true)
     String json
 
     def parser = new JsonSlurper()

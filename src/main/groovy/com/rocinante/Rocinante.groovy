@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 public @interface Rocinante {
     String binding() default '';
     String config() default '';
-    boolean content() default false;
+    boolean isFile() default false;
 }

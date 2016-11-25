@@ -28,7 +28,7 @@ class RocinanteInterceptor extends AbstractMethodInterceptor {
             String configValue  = findValue(config, it.rocinante.config()).last()
             String mappingValue = findValue(mapping, it.rocinante.binding()).last()
             FieldInfo field = it.field
-            if (it.rocinante.content()) {
+            if (it.rocinante.isFile()) {
                 // TODO: create a context for this
                 File tapesDir = new File(config.basepath, config.tapes)
                 File responseFile = new File(tapesDir, mappingValue)
