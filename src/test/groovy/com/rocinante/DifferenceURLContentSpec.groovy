@@ -3,16 +3,23 @@ package com.rocinante
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 
-class MySpec extends Specification {
+@Rocinante
+class DifferenceURLContentSpec extends Specification {
 
-    @Rocinante(directory = 'src/test/resources')
-    def json
+    @Rocinante(config = 'host')
+    String basePath
+
+    @Rocinante(binding = 'request.url')
+    String url
+
+    @Rocinante(binding = 'response.bodyFileName', content = true)
+    String json
 
     def parser = new JsonSlurper()
 
     def "should make diff of my tapes"() {
         given:
-        def real = 'http://www.mocky.io/v2/5835a32e1100001c070bffa9'.toURL().text
+        def real = [basePath,url].join().toURL().text
         def that = parser.parseText(json)
         def other = parser.parseText(real)
 
