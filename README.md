@@ -12,16 +12,26 @@ Rocinante project is basically a [Spock](http://spockframework.org) extension th
 
 `@Rocinante`: Field's annotation binder for mapping files
 
-- `directory`: base path for files;
-- `mappings`: mappings directory (default value: "mappings");
-- `tapes`: tapes directory (default value: "__files");
+- `binding`: binding value for mapping file;
+- `config`: config value for configurations (binding precedence);
+- `isFile`: flag that indicates the binding is a file pointer (default `false`);
 
 `RocinanteExtension`: A Spock extension where the stuffs happen.
 
 `RocinanteInterceptor`: A Spock interceptor that writes a field with `@Rocinante` annotation binder.
 
+Config properties (Java properties):
+```properties
+host=http://www.mocky.io
+basepath=src/test/resources
+mappings=/mappings
+tapes=/__files
+```
+
 ## Run
 
 ```bash
-./gradlew test
+./gradlew test`
 ```
+
+You can use `-D<property>` for overriding default properties.
