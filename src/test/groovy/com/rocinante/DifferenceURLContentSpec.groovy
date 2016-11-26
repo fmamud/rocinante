@@ -19,7 +19,7 @@ class DifferenceURLContentSpec extends Specification {
 
     def "should make diff of my tapes"() {
         given:
-        def real = [basePath,url].join().toURL().text
+        def real = [basePath, url].join().toURL().text
         def that = parser.parseText(json)
         def other = parser.parseText(real)
 
