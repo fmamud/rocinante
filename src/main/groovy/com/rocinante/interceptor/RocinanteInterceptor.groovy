@@ -13,7 +13,7 @@ class RocinanteInterceptor extends AbstractMethodInterceptor {
 
     private List bindings
 
-    Config config
+    Config config = Config.instance
 
     RocinanteInterceptor(mapping, bindings, config) {
         this.mapping = mapping
@@ -23,7 +23,6 @@ class RocinanteInterceptor extends AbstractMethodInterceptor {
 
     @Override
     public void interceptFeatureMethod(IMethodInvocation invocation) throws Throwable {
-        println ">>> $bindings"
         bindings.each {
             String configValue  = findValue(config, it.rocinante.config()).last()
             String mappingValue = findValue(mapping, it.rocinante.binding()).last()

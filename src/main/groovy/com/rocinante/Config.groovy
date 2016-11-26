@@ -1,15 +1,20 @@
 package com.rocinante
 
-class   Config {
+@Singleton
+class Config {
 
-    Properties gradleProperties
+    private static final Properties gradleProperties
 
-    Config() {
+    static {
         gradleProperties = new Properties()
         gradleProperties.load(new FileInputStream('gradle.properties'))
     }
 
     def propertyMissing(String name) {
         System.properties.getProperty(name) ?: gradleProperties.getProperty(name)
+    }
+
+    static Set properties() {
+        gradleProperties.keySet()
     }
 }
