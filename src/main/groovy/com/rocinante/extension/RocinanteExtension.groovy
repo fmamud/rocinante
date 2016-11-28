@@ -14,7 +14,7 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
 
     private JsonSlurper slurper = new JsonSlurper()
 
-    private Config config = new Config()
+    private Config config = Config.instance
 
     private def bindings = []
 

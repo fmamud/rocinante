@@ -14,4 +14,10 @@ test {
         showStackTraces true
         exceptionFormat 'full'
     }
+
+    // TODO: dynamic load gradle.properties entries
+    systemProperty "host", System.getProperty("host")
+    systemProperty "basepath", System.getProperty("basepath")
+    systemProperty "mappings", System.getProperty("mappings")
+    systemProperty "tapes", System.getProperty("tapes")
 }

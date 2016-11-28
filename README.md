@@ -31,7 +31,7 @@ tapes=/__files
 ## Run
 
 ```bash
-./gradlew test`
+./gradlew test
 ```
 
 You can use `-D<property>` for overriding default properties.
