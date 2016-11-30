@@ -4,12 +4,14 @@ import com.rocinante.Config
 import com.rocinante.Rocinante
 import com.rocinante.interceptor.RocinanteInterceptor
 import groovy.json.JsonSlurper
+import groovy.util.logging.Log
 import org.junit.runner.Description
 import org.spockframework.runtime.extension.AbstractAnnotationDrivenExtension
 import org.spockframework.runtime.model.*
 
 import java.lang.reflect.Method
 
+@Log
 class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
 
     private JsonSlurper slurper = new JsonSlurper()
@@ -24,7 +26,7 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
     }
 
     @Override
-    void visitSpecAnnotation(Rocinante annotation, SpecInfo spec) {
+    void visitSpecAnnotation(Rocinante rocinante, SpecInfo spec) {
         def file = new File(config.basepath)
 
         if (file.exists()) {
@@ -33,24 +35,31 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
             if (mappingDir.exists()) {
                 def mappings = mappingDir.listFiles()
                 mappings.each {
-                    buildFeature(it, spec)
+                    buildFeature(it, rocinante, spec)
                 }
             }
         }
 
-        spec.features[0].skipped = true
+        spec.features[0].excluded = true
     }
 
-    private buildFeature(File mappingFile, SpecInfo spec) {
+    private buildFeature(File mappingFile, Rocinante rocinante, SpecInfo spec) {
         def clazz = spec.reflection
 
         def mapping = slurper.parseText(mappingFile.text)
+
+        def condition = rocinante.condition().newInstance(mapping, mapping)
 
         clazz.getDeclaredMethods().each { Method method ->
             FeatureMetadata metadata = method.getAnnotation(FeatureMetadata.class)
             if (metadata) {
                 method.accessible = true
-                spec.addFeature(createFeature(mapping, method, spec))
+                def feature = createFeature(mapping, method, spec)
+                if (!condition()) {
+                    log.warning("The feature method '$feature.name' condition not satisfied.")
+                    feature.skipped = true
+                }
+                spec.addFeature(feature)
             }
         }
     }
