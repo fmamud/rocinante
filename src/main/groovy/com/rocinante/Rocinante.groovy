@@ -15,4 +15,5 @@ public @interface Rocinante {
     String binding() default '';
     String config() default '';
     boolean isFile() default false;
+    Class condition() default { true };
 }

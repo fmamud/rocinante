@@ -15,6 +15,7 @@ Rocinante project is basically a [Spock](http://spockframework.org) extension th
 - `binding`: binding value for mapping file;
 - `config`: config value for configurations (binding precedence);
 - `isFile`: flag that indicates the binding is a file pointer (default `false`);
+- `condition`: closure condition for create a dynamic feature method (delegate is the mapping file);
 
 `RocinanteExtension`: A Spock extension where the stuffs happen.
 
