@@ -1,10 +1,10 @@
 package com.rocinante
 
+import com.rocinante.utils.ParallelIterator
 import groovy.json.JsonSlurper
-import org.spockframework.lang.ConditionBlock
 import spock.lang.Specification
 
-@Rocinante
+@Rocinante(condition = { response.status == 200 })
 class DifferenceURLContentSpec extends Specification {
 
     @Rocinante(config = 'host')
@@ -21,16 +21,15 @@ class DifferenceURLContentSpec extends Specification {
     def "should make diff of my tapes"() {
         given:
         def real = [basePath, url].join().toURL().text
-        def that = parser.parseText(json)
-        def other = parser.parseText(real)
-
-        def sample = that[0]*.key
+        def expected = parser.parseText(json)
+        def actually = parser.parseText(real)
+        def iterator = new ParallelIterator(expected, actually)
 
         expect:
-        (0..<that.size()).each { idx ->
-            sample.each { def field ->
-                assert that[idx][field] == other[idx][field]: "The $field field does not match.(that: ${that[idx][field]}, other: ${other[idx][field]})"
-            }
-        }
+        iterator.collect { Tuple tuple ->
+            def (expect, actual) = tuple
+            assert expect == actual
+            expect == actual
+        }.every()
     }
 }
