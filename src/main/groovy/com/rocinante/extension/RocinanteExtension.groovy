@@ -65,7 +65,7 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
     }
 
     private FeatureInfo createFeature(mapping, method, spec) {
-        def name = buildName(mapping.request.url)
+        def name = buildName(mapping)
 
         def description = Description.createSuiteDescription(name)
 
@@ -88,7 +88,8 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
         return feature
     }
 
-    private String buildName(String name) {
+    private String buildName(mapping) {
+        def name = mapping.request.url
         def splitted = name.split('\\?')
         def slug = splitted[0]
         def result = slug.replaceAll('/', '-').replaceAll('\\.', '_') - '-'
@@ -98,6 +99,6 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
             def keys = params*.split('=')*.first()
             result << [' (', keys.join(','), ','].join()
         }
-        result
+        result ?: mapping.id
     }
 }
