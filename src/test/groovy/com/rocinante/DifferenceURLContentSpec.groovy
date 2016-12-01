@@ -4,6 +4,8 @@ import com.rocinante.utils.ParallelIterator
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 
+import static com.rocinante.utils.TretaAssert.compare
+
 @Rocinante(condition = { response.status == 200 })
 class DifferenceURLContentSpec extends Specification {
 
@@ -26,10 +28,9 @@ class DifferenceURLContentSpec extends Specification {
         def iterator = new ParallelIterator(expected, actually)
 
         expect:
-        iterator.collect { Tuple tuple ->
-            def (expect, actual) = tuple
-            assert expect == actual
-            expect == actual
+        iterator.collect {
+            def (expect, actual, index) = it;
+            compare(expect, actual, index)
         }.every()
     }
 }
