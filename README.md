@@ -29,6 +29,10 @@ mappings=/mappings
 tapes=/__files
 ```
 
+## Built-in Specifications
+
+* **DifferenceURLContentSpec**: Spec does diff between mapping response body and real path response body (json diff compare). Only responses with status 200 are considerate in condition clause.
+
 ## Run
 
 ```bash
