@@ -54,7 +54,7 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
             FeatureMetadata metadata = method.getAnnotation(FeatureMetadata.class)
             if (metadata) {
                 method.accessible = true
-                def feature = createFeature(mapping, method, spec)
+                def feature = createFeature(mappingFile, mapping, method, spec)
                 if (!condition()) {
                     log.warning("The feature method '$feature.name' condition not satisfied.")
                     feature.skipped = true
@@ -64,8 +64,8 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
         }
     }
 
-    private FeatureInfo createFeature(mapping, method, spec) {
-        def name = buildName(mapping)
+    private FeatureInfo createFeature(mappingFile, mapping, method, spec) {
+        def name = buildName(mappingFile.name)
 
         def description = Description.createSuiteDescription(name)
 
@@ -88,17 +88,16 @@ class RocinanteExtension extends AbstractAnnotationDrivenExtension<Rocinante> {
         return feature
     }
 
-    private String buildName(mapping) {
-        def name = mapping.request.url
+    private String buildName(name) {
         def splitted = name.split('\\?')
-        def slug = splitted[0]
-        def result = slug.replaceAll('/', '-').replaceAll('\\.', '_') - '-'
+        def slug = splitted[0] - '.json'
+        def result = slug.replaceAll('/', '-').replaceAll('\\.', '_')
         if (splitted.size() > 1) {
             def rest = splitted[1]
             def params = rest.split('&')
             def keys = params*.split('=')*.first()
             result << [' (', keys.join(','), ','].join()
         }
-        result ?: mapping.id
+        result
     }
 }
