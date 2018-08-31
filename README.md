@@ -6,8 +6,6 @@ Test suite for integration tests
 
 > **Rocinante** is [Don Quixote](https://en.wikipedia.org/wiki/Don_Quixote)'s donkey in the novel Don Quixote by _Miguel de Cervantes_. In many ways, Rocinante is not only Don Quixote's horse, but also his double: like Don Quixote, he is awkward, past his prime, and engaged in a task beyond his capacities.
 
-## Project
-
 Rocinante project is basically a [Spock](http://spockframework.org) extension that reads a mapping's tape directory and generate dynamic feature methods [Wiremock](http://wiremock.org/docs/record-playback) based.
 
 `@Rocinante`: Field's annotation binder for mapping files
@@ -22,6 +20,7 @@ Rocinante project is basically a [Spock](http://spockframework.org) extension th
 `RocinanteInterceptor`: A Spock interceptor that writes a field with `@Rocinante` annotation binder.
 
 Config properties (Java properties):
+
 ```properties
 host=http://www.mocky.io
 basepath=src/test/resources
@@ -31,12 +30,20 @@ tapes=/__files
 
 ## Built-in Specifications
 
-* **DifferenceURLContentSpec**: Spec does diff between mapping response body and real path response body (json diff compare). Only responses with status 200 are considerate in condition clause.
+- **DifferenceURLContentSpec**: Spec does diff between mapping response body and real path response body (json diff compare). Only responses with status 200 are considerate in condition clause.
 
-## Run
+# How to Run
 
 ```bash
 ./gradlew test
 ```
 
 You can use `-D<property>` for overriding default properties.
+
+# How to Build
+
+It's not necessary you build the project. Just use =]
+
+# How to Deploy
+
+Rocinante is a tool/lib project and the deploy is subjective according to the project that uses.
